@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Dark theme inspired by enterprise dashboards */
+  --color-background: 10 10 12;
+  --color-foreground: 250 250 250;
+  
+  --color-card: 18 18 22;
+  --color-card-foreground: 250 250 250;
+  
+  --color-popover: 18 18 22;
+  --color-popover-foreground: 250 250 250;
+  
+  --color-primary: 34 197 94;
+  --color-primary-foreground: 0 0 0;
+  
+  --color-secondary: 39 39 42;
+  --color-secondary-foreground: 250 250 250;
+  
+  --color-muted: 39 39 42;
+  --color-muted-foreground: 161 161 170;
+  
+  --color-accent: 39 39 42;
+  --color-accent-foreground: 250 250 250;
+  
+  --color-destructive: 239 68 68;
+  --color-destructive-foreground: 250 250 250;
+  
+  --color-border: 39 39 42;
+  --color-input: 39 39 42;
+  --color-ring: 34 197 94;
+  
+  --radius: 0.5rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+}
