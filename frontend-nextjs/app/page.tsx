@@ -4,7 +4,6 @@ import { LogoutButton } from '@/components/logout-button'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { getApiUrl } from '@/lib/api'
 
 async function getSession() {
   const cookieStore = await cookies()
@@ -15,43 +14,26 @@ async function getSession() {
   }
 
   try {
-    const apiUrl = getApiUrl()
-    const fullUrl = `${apiUrl}/api/auth/session`
-    console.log('Checking session:', { apiUrl, fullUrl, hasCookie: !!sessionCookie, cookieValue: sessionCookie?.value?.substring(0, 20) + '...' })
-    
-    // Build cookie header properly - escape the cookie value if needed
-    const cookieHeader = `AppSession=${sessionCookie.value}`
-    
-    const response = await fetch(fullUrl, {
-      method: 'GET',
-      headers: {
-        'Cookie': cookieHeader
-      },
+    // Call the API route directly - in Next.js, we can import and call route handlers
+    // But for simplicity, we'll use fetch with the internal URL
+    // In Docker, localhost refers to the container itself
+    const response = await fetch('http://127.0.0.1:3000/api/session', {
       cache: 'no-store',
-      // Next.js server-side fetch may need this
-      next: { revalidate: 0 }
+      headers: {
+        'Cookie': cookieStore.toString()
+      }
     })
     
-    console.log('Session check response:', response.status, response.statusText, response.url)
-    
     if (!response.ok) {
-      const text = await response.text()
-      console.log('Error response body:', text.substring(0, 200))
       return null
     }
 
     const data = await response.json()
-    console.log('Session data:', data)
     return data.authenticated ? data : null
   } catch (error) {
     console.error('Session check failed:', error)
-    if (error instanceof Error) {
-      console.error('Error details:', error.message, error.stack)
-    }
     return null
   }
-
-  return null
 }
 
 export default async function Home() {
