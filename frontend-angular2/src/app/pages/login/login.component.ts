@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -26,7 +26,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   email = '';
   password = '';
   loading = false;
@@ -36,6 +36,21 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router
   ) {}
+
+  ngOnInit() {
+    // Check if user is already authenticated as admin
+    this.authService.checkSession().subscribe({
+      next: (session) => {
+        if (session.authenticated && session.userType === 'admin') {
+          // Already logged in as admin, redirect to dashboard
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error: () => {
+        // Not authenticated, stay on login page
+      }
+    });
+  }
 
   onSubmit() {
     this.loading = true;
