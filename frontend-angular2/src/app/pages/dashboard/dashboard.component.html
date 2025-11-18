@@ -1,0 +1,153 @@
+<div class="dashboard-container">
+    <mat-toolbar color="primary" class="dashboard-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <mat-icon>admin_panel_settings</mat-icon>
+          </div>
+          <h1>Admin Dashboard</h1>
+        </div>
+        
+        <div class="user-section">
+          <div *ngIf="session" class="user-info">
+            <div class="user-avatar">
+              {{ session.name?.charAt(0) }}
+            </div>
+            <div class="user-details">
+              <div class="user-name">{{ session.name }}</div>
+              <div class="user-email">{{ session.email }}</div>
+            </div>
+          </div>
+          
+          <button mat-stroked-button (click)="logout()">
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </mat-toolbar>
+  
+    <main class="dashboard-main">
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon primary">
+              <mat-icon>description</mat-icon>
+            </div>
+            <div class="stat-value">{{ applications.length }}</div>
+            <div class="stat-label">Total Applications</div>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon warning">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div class="stat-value">2</div>
+            <div class="stat-label">Pending Review</div>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon info">
+              <mat-icon>visibility</mat-icon>
+            </div>
+            <div class="stat-value">1</div>
+            <div class="stat-label">In Review</div>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon success">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-value">1</div>
+            <div class="stat-label">Approved</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+  
+      <mat-card class="applications-card">
+        <mat-card-header>
+          <mat-card-title>Recent Applications</mat-card-title>
+          <mat-card-subtitle>Review and manage user applications</mat-card-subtitle>
+        </mat-card-header>
+  
+        <!-- Added search input field -->
+        <div class="search-container">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search Applications</mat-label>
+            <input 
+              matInput 
+              [(ngModel)]="searchTerm" 
+              placeholder="Search by name, email, or ID"
+              type="text">
+            <mat-icon matPrefix>search</mat-icon>
+            <button 
+              mat-icon-button 
+              matSuffix 
+              *ngIf="searchTerm" 
+              (click)="searchTerm = ''"
+              aria-label="Clear">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+  
+        <mat-card-content>
+          <table class="applications-table">
+            <thead>
+              <tr>
+                <th>Application ID</th>
+                <th>Applicant</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Added FilterPipe to filter applications by search term -->
+              <tr *ngFor="let app of applications | filter:searchTerm:['id', 'applicantName', 'email']">
+                <td>
+                  <div class="app-id">{{ app.id }}</div>
+                  <div class="app-date">{{ app.submittedDate }}</div>
+                </td>
+                <td>
+                  <div class="applicant-info">
+                    <div class="applicant-avatar">
+                      {{ app.applicantName.charAt(0) }}
+                    </div>
+                    <div class="applicant-name">{{ app.applicantName }}</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="contact-email">{{ app.email }}</div>
+                  <div class="contact-phone">{{ app.phone }}</div>
+                </td>
+                <td>
+                  <mat-chip [class]="'status-chip status-' + app.status">
+                    {{ getStatusLabel(app.status) }}
+                  </mat-chip>
+                </td>
+                <td>
+                  <div class="progress-container">
+                    <mat-progress-bar mode="determinate" [value]="app.progress"></mat-progress-bar>
+                    <span class="progress-text">{{ app.progress }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <button mat-raised-button color="primary" (click)="viewApplication(app)">
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </main>
+  </div>
+  

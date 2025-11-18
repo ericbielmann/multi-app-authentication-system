@@ -1,0 +1,160 @@
+<div class="app-container">
+  <!-- Header -->
+  <mat-toolbar color="primary">
+    <div class="toolbar-content">
+      <div class="toolbar-start">
+        <mat-icon>description</mat-icon>
+        <h1 class="toolbar-title">User Application</h1>
+      </div>
+      
+      <div *ngIf="session?.userType === 'admin'" class="admin-badge">
+        <div class="admin-avatar">
+          <span>{{ session!.name?.charAt(0) }}</span>
+        </div>
+        <div class="admin-info">
+          <div class="admin-name">{{ session!.name }}</div>
+          <div class="admin-label">Admin View</div>
+        </div>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- Welcome Message -->
+      <div *ngIf="session" class="welcome-section">
+        <h2 class="welcome-title">
+          <span *ngIf="session.userType === 'admin'">Viewing Application</span>
+          <span *ngIf="session.userType === 'regular'">Welcome, {{ session.name }}</span>
+        </h2>
+        <p class="welcome-subtitle">
+          Complete your application by filling out the required information below
+        </p>
+      </div>
+
+      <!-- Progress Bar -->
+      <mat-card class="progress-card">
+        <mat-card-content>
+          <div class="progress-info">
+            <span class="progress-step">Step {{ currentStep }} of {{ totalSteps }}</span>
+            <span class="progress-percent">{{ progressPercentage }}% Complete</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="progressPercentage" color="primary"></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Application Form Card -->
+      <mat-card class="form-card">
+        <mat-card-content>
+          <!-- Step 1: Personal Information -->
+          <div *ngIf="currentStep === 1">
+            <h3 class="step-title">Personal Information</h3>
+            
+            <!-- Binding form controls to inputs -->
+            <form [formGroup]="personalInfoForm">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>First Name</mat-label>
+                  <input matInput formControlName="firstName" placeholder="John">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput formControlName="lastName" placeholder="Doe">
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Email Address</mat-label>
+                <input matInput type="email" formControlName="email">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Phone Number</mat-label>
+                <input matInput type="tel" formControlName="phone">
+              </mat-form-field>
+            </form>
+          </div>
+
+          <!-- Step 2: Address -->
+          <div *ngIf="currentStep === 2">
+            <h3 class="step-title">Address Information</h3>
+            
+            <!-- Binding address form controls -->
+            <form [formGroup]="addressForm">
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Street Address</mat-label>
+                <input matInput formControlName="street">
+              </mat-form-field>
+
+              <div class="form-row-three">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>City</mat-label>
+                  <input matInput formControlName="city" placeholder="New York">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>State</mat-label>
+                  <input matInput formControlName="state" placeholder="NY">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>ZIP Code</mat-label>
+                  <input matInput formControlName="zip" placeholder="10001">
+                </mat-form-field>
+              </div>
+            </form>
+          </div>
+
+          <!-- Step 3: Documents -->
+          <div *ngIf="currentStep === 3">
+            <h3 class="step-title">Document Upload</h3>
+            
+            <div class="upload-zone">
+              <mat-icon class="upload-icon">cloud_upload</mat-icon>
+              <p class="upload-title">Click to upload or drag and drop</p>
+              <p class="upload-subtitle">PDF, PNG, JPG up to 10MB</p>
+            </div>
+          </div>
+
+          <!-- Step 4: Review -->
+          <div *ngIf="currentStep === 4">
+            <h3 class="step-title">Review & Submit</h3>
+            
+            <mat-card class="review-card">
+              <mat-card-content>
+                <p class="review-text">
+                  By submitting this application, you confirm that all information provided is accurate and complete.
+                </p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Navigation Buttons -->
+      <div class="nav-buttons">
+        <button mat-raised-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+          <span *ngIf="session?.userType === 'admin'">Back to App</span>
+          <span *ngIf="session?.userType === 'regular'">Go Back to Home</span>
+        </button>
+
+        <div class="nav-actions">
+          <button *ngIf="currentStep > 1" mat-raised-button (click)="prevStep()">
+            Previous
+          </button>
+          
+          <button *ngIf="currentStep < totalSteps" mat-raised-button color="primary" (click)="nextStep()">
+            Next Step
+          </button>
+
+          <button *ngIf="currentStep === totalSteps" mat-raised-button color="primary">
+            Submit Application
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

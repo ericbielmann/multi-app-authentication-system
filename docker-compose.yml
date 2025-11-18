@@ -1,0 +1,76 @@
+services:
+  # Backend .NET API
+  backend:
+    build:
+      context: ./backend-dotnet
+      dockerfile: Dockerfile
+    container_name: backend-api
+    ports:
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+    networks:
+      - app-network
+
+  # Next.js Frontend
+  nextjs:
+    build:
+      context: ./frontend-nextjs
+      dockerfile: Dockerfile
+    container_name: frontend-nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - API_URL=http://backend:5001
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Angular User App
+  angular-user:
+    build:
+      context: ./frontend-angular1
+      dockerfile: Dockerfile
+    container_name: frontend-angular1
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Angular Admin App
+  angular-admin:
+    build:
+      context: ./frontend-angular2
+      dockerfile: Dockerfile
+    container_name: frontend-angular2
+    ports:
+      - "4300:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Nginx Reverse Proxy (for same-domain setup)
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - nextjs
+      - angular-user
+      - angular-admin
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

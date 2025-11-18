@@ -1,0 +1,59 @@
+<div style="min-height: 100vh; background-color: #0a0a0c; display: flex; align-items: center; justify-content: center; padding: 24px;">
+    <div style="width: 100%; max-width: 450px;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <div style="width: 64px; height: 64px; background-color: #22c55e; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+          <mat-icon style="font-size: 32px; width: 32px; height: 32px; color: black;">lock</mat-icon>
+        </div>
+        <h1 style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">
+          Admin Portal
+        </h1>
+        <p style="opacity: 0.7; font-size: 16px;">
+          Sign in to access the admin dashboard
+        </p>
+      </div>
+  
+      <mat-card>
+        <mat-card-content style="padding: 32px;">
+          <form (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 24px;">
+            <div>
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Email Address</mat-label>
+                <input matInput type="email" [(ngModel)]="email" name="email" required placeholder="admin@example.com">
+              </mat-form-field>
+              <!-- Escaped @ character to prevent Angular template syntax error -->
+              <p style="font-size: 12px; opacity: 0.6; margin-top: 4px;">
+                Try: admin&#64;test.com
+              </p>
+            </div>
+  
+            <div>
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" [(ngModel)]="password" name="password" required placeholder="••••••••">
+              </mat-form-field>
+              <p style="font-size: 12px; opacity: 0.6; margin-top: 4px;">
+                Password: Admin123!
+              </p>
+            </div>
+  
+            <mat-card *ngIf="error" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);">
+              <mat-card-content style="display: flex; align-items: center; gap: 8px; color: #ef4444; padding: 12px;">
+                <mat-icon>error</mat-icon>
+                <span style="font-size: 14px;">{{ error }}</span>
+              </mat-card-content>
+            </mat-card>
+  
+            <button mat-raised-button color="primary" type="submit" [disabled]="loading" style="width: 100%; height: 48px; font-size: 16px;">
+              <mat-spinner *ngIf="loading" diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+              {{ loading ? 'Signing in...' : 'Sign In' }}
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+  
+      <p style="text-align: center; font-size: 14px; opacity: 0.6; margin-top: 24px;">
+        Admin access only. Unauthorized access is prohibited.
+      </p>
+    </div>
+  </div>
+  
