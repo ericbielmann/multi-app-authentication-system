@@ -41,16 +41,16 @@ A complete take-home test solution demonstrating seamless authentication and ses
 
 ### 1. Clone and Navigate
 
-\`\`\`bash
+```bash
 git clone <repository-url>
 cd take-home-fe-test
-\`\`\`
+```
 
 ### 2. Start All Services
 
-\`\`\`bash
+```bash
 docker-compose up --build
-\`\`\`
+```
 
 This will start:
 - Backend API: http://localhost:5001
@@ -134,14 +134,14 @@ This solution is **production-ready** for Azure App Service with Cloudflare.
 
 ### Quick Production Setup
 
-\`\`\`bash
+```bash
 # Update domain configuration
 export COOKIE_DOMAIN=".yourdomain.com"
 export CORS_ORIGINS="https://yourdomain.com,https://www.yourdomain.com"
 
 # Deploy to Azure (see DEPLOYMENT.md for detailed steps)
 az webapp up --name takehome-app --resource-group takehome-rg
-\`\`\`
+```
 
 See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for complete production deployment guide.
 
@@ -149,35 +149,35 @@ See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for complete production deployment guid
 
 ### Backend (.NET)
 
-\`\`\`bash
+```bash
 cd backend-dotnet
 dotnet restore
 dotnet run
-\`\`\`
+```
 
 ### Next.js
 
-\`\`\`bash
+```bash
 cd frontend-nextjs
 npm install
 npm run dev
-\`\`\`
+```
 
 ### Angular User App
 
-\`\`\`bash
+```bash
 cd frontend-angular1
 npm install
 npm start
-\`\`\`
+```
 
 ### Angular Admin App
 
-\`\`\`bash
+```bash
 cd frontend-angular2
 npm install
 npm start
-\`\`\`
+```
 
 ## 📝 Technical Implementation
 
@@ -186,15 +186,16 @@ npm start
 The backend uses environment-aware cookie configuration:
 
 **Development:**
-\`\`\`csharp
+```csharp
 Secure = false              // HTTP allowed
 SameSite = Lax             // Standard browser behavior
 Domain = "localhost"       // Local domain
-\`\`\`
+```
 
 **Production:**
-\`\`\`csharp
+```csharp
 Secure = true              // HTTPS required
 SameSite = None            // Required for cross-origin support
 HttpOnly = true            // Protect against XSS
 Domain = ".yourdomain.com" // Set to your domain
+```
